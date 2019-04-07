@@ -1,14 +1,14 @@
 ---
 title: TCG Hub - API Reference
 
-language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
-  - ruby
-  - python
-  - javascript
+# language_tabs: # must be one of https://git.io/vQNgJ
+#   - shell
+#   - ruby
+#   - python
+#   - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
+  # - <a href='#'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
 
 includes:
@@ -21,11 +21,9 @@ search: true
 
 Welcome to the TCG Hub API! You can use our API to access the TCG Hub API endpoints, which can get sets, cards, prices from our database.
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
 # Authentication
 
-> To authorize, use this code:
+<!-- > To authorize, use this code:
 
 ```ruby
 require 'kittn'
@@ -51,7 +49,7 @@ const kittn = require('kittn');
 let api = kittn.authorize('meowmeowmeow');
 ```
 
-> Make sure to replace `meowmeowmeow` with your API key.
+> Make sure to replace `meowmeowmeow` with your API key. -->
 
 Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
 
@@ -63,54 +61,65 @@ Kittn expects for the API key to be included in all API requests to the server i
 You must replace <code>meowmeowmeow</code> with your personal API key.
 </aside>
 
+# Sets
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "sets": [
+    {
+      "code": "base1",
+      "ptcgoCode": "BS",
+      "name": "Base",
+      "series": "Base",
+      "totalCards": 102,
+      "standardLegal": false,
+      "expandedLegal": false,
+      "releaseDate": "01/09/1999",
+      "symbolUrl": "https://images.pokemontcg.io/base1/symbol.png",
+      "logoUrl": "https://images.pokemontcg.io/base1/logo.png",
+      "setUpdatedAt": "01/03/2019 01:00:00",
+      "updatedAt": "13/01/2019 21:42:00",
+      "tcgPlayerGroupId":"604",
+      "section":"main",
+      "order":1
+    }
+  ]
+}
+```
+
+This endpoint retrieves all Sets stored in the database.
+
+### HTTP Request
+
+`GET http://api.tcghub.co.uk/sets`
+
+
 # Cards
-
-## Get Cards From Set
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
 
 > The above command returns JSON structured like this:
 
 ```json
 [
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
+    {
+        "id": "sm9-1",
+        "name": "Celebi & Venusaur-GX",
+        "imageUrl": "https://images.pokemontcg.io/sm9/1.png",
+        "subtype": "GX",
+        "supertype": "Pokémon",
+        "hp": "270",
+        "retreatCost": [
+            "Colorless",
+            "Colorless",
+            "Colorless",
+            "Colorless"
+        ],
+        ...
+        "resistances": [],
+        "imageUrlHiRes": "https://images.pokemontcg.io/sm9/1_hires.png",
+        "nationalPokedexNumber": 251
+    }
 ]
 ```
 
@@ -126,111 +135,66 @@ Parameter |  Description
 --------- | -----------
 set | Full set name split with a space, '%20' or '_'
 
+# Prices
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "prices":[
+    {
+      "id":"base1-1",
+      "number":1,
+      "productId":"42346",
+      "productUrl":"base-set/alakazam",
+      "prices":[
+        {
+          "lowPrice":5.0,
+          "midPrice":11.35,
+          "highPrice":20.0,
+          "marketPrice":11.73,
+          "variant":"Holofoil"
+        }
+      ]
+    }
+  ]
+}
+```
+
+This endpoint retrieves all the latest prices from TCG Player. These prices are updated daily automatically on the server, to be retreived via this call.
+
+### HTTP Request
+
+`GET http://api.tcghub.co.uk/prices`
+
+# Card of the Day
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": "ex12-20",
+  "name": "Lunatone",
+  "imageUrl": "https://images.pokemontcg.io/ex12/20.png",
+  "subtype": "Basic",
+  "supertype": "Pokémon",
+  "ability": {
+    "name": "Sol Shade",
+    "text": "As long as you have Solrock in play, each player's Fire Pokémon (excluding Pokémon-ex) can't use any Poké-Powers.",
+    "type": "Poké-Body"
+  },
+  ...
+  "imageUrlHiRes": "https://images.pokemontcg.io/ex12/20_hires.png",
+  "nationalPokedexNumber": 337
+}
+```
+
+This endpoint retrieves all the Card of the Day. This is automatically updated on Azure daily, ready to be retrieved via this call.
+
+### HTTP Request
+
+`GET http://api.tcghub.co.uk/cotd`
+
 <!-- <aside class="success">
 Remember — a happy kitten is an authenticated kitten!
 </aside> -->
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
-```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
-
